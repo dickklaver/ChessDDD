@@ -1,15 +1,17 @@
 ﻿namespace Chess.Core
 {
-    internal class Square
+    public class Square : ValueObject
     {
-        private const string validFiles = "ABCDEFGH";
+        private const string validFiles = "abcdefgh";
         private const string validRanks = "12345678";
 
-        private string rankString;
-        private string fileString;
+        public string RankString { get; private set; }
+        public string FileString { get; private set; }
 
         public Square(string squareString) // A1 - H8
         {
+            squareString = squareString.ToLower();
+
             if (squareString.Length != 2)
                 throw new ArgumentException("invalid square");
 
@@ -18,37 +20,53 @@
             var isValidFile = validFiles.Contains(fileString);
             if (!isValidFile)
                 throw new ArgumentException("invalid file");
-            this.fileString = fileString;
+            this.FileString = fileString;
 
             var rankString = squareString.Substring(1, 1);
             var isValidRank = validRanks.Contains(rankString);
             if (!isValidRank)
                 throw new ArgumentException("invalid rank");
-            this.rankString = rankString;
+            this.RankString = rankString;
         }
 
-        private int SquareNumber
+        public Square(int fileNumber, int rankNumber) // a1 - h8
+        {
+            if (fileNumber < 1 || fileNumber > 8)
+                throw new ArgumentException("invalid filenumber");
+
+            if (rankNumber < 1 || rankNumber > 8)
+                throw new ArgumentException("invalid ranknumber");
+
+            
+            this.FileString = validFiles.Substring(fileNumber - 1, 1);
+            this.RankString = rankNumber.ToString();
+        }
+
+        public int FileNumber
         {
             get
             {
-                return FileNumber + (RankNumber - 1) * 8;
+                return validFiles.IndexOf(this.FileString) + 1;
             }
         }
 
-        private int FileNumber
+        public int RankNumber
         {
             get
             {
-                return validFiles.IndexOf(this.fileString) + 1;
+                return validRanks.IndexOf(this.RankString) + 1;
             }
         }
 
-        private int RankNumber
+        protected override IEnumerable<IComparable> GetEqualityComponents()
         {
-            get
-            {
-                return validRanks.IndexOf(this.rankString) + 1;
-            }
+            yield return this.RankNumber;
+            yield return this.FileNumber;
+        }
+
+        public override string ToString()
+        {
+            return this.FileString + this.RankString;
         }
     }
 }

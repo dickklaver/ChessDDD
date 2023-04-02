@@ -1,13 +1,12 @@
 ﻿namespace Chess.Core
 {
-    public class Queen : Piece
+    public class Rook : Piece
     {
         List<MoveStrategy> moveStrategies = new List<MoveStrategy>();
 
-        public Queen(Square initialSquare, Player player) : base(initialSquare, player, "Q")
+        public Rook(Square initialSquare, Player player) : base(initialSquare, player, "R")
         {
             this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(8));
-            this.moveStrategies.Add(new DiagonallMoveStrategy(8));
         }
 
         public override List<Square> GetSquaresPieceCanTheoreticallyCapture()

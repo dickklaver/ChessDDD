@@ -2,85 +2,39 @@
 {
     public class Game : AggregateRoot
     {
+        //TODO implement: wether or not current player will be in check after move (self-check)
+        //TODO implement: board.ToFenNotation()
+        //TODO implement: pawn capture en passant
+        //TODO implement: pawn promotion
+        //TODO implement: king's side castling
+        //TODO implement: queen's side castling
+        //TODO implement: check detection
+        //TODO implement: checkmate detection
+        //TODO implement: stalemate detection
+
         public Game()
         {
             this.Board = new Board();
-            this.InitializeBoard();
-            this.IsPartijAfgelopen = false;
+            this.Board.InitializeBoard();
         }
 
         public Board Board { get; set; }
 
-        public bool HeeftComputertWit { get; set; }
-
-        public bool IsPartijAfgelopen { get; set; }
-
-        private void InitializeBoard()
+        public Result<bool> MakeMove(string from, string to)
         {
-            // TODO Initialiseer het board
-            this.Board = new Board();
-        }
-
-        private void VraagWieWitHeeft()
-        {
-            //TODO vragen wie wit heeft; zet HeeftComputertWit
-        }
-
-
-        public Move BedenkEenZet()
-        {
-            //TODO mbv Board de beste zet bedenken
-            return new Move("E2", "E4");
-        }
-
-        public Move AccepteerEenZet()
-        {
-            Move result;
-
-            //TODO op basis van gebruikersinvoer een legale zet maken
-            var isLegaal = false;
-            while (!isLegaal)
+            //todo return a Result<Move> within which a string representation of the move... instead of bool
+            try
             {
-                var vanVeldString = VraagVanVeld();
-                var naarVeldString = VraagNaarVeld();
-                result = new Move(vanVeldString, naarVeldString);
-                // TODO tijdelijk true 
-                isLegaal = true;
-                //TODO checken of zet legaal is
-                if (!isLegaal)
-                    throw new Exception("Ongeldige zet");
-
-                if (result.IsPromotie())
-                {
-                    // TODO vraag promotieStuk voorlopig standaar Queen
-                    Piece stuk = new Queen();
-                    result.SetPromotieStuk(stuk);
-                }
+                var fromSquare = new Square(from);
+                var toSquare = new Square(to);
+                this.Board.MakeMove(fromSquare, toSquare);
+                return Result.Success(true);
             }
-
-            return result;
+            catch (Exception ex)
+            {
+                return Result.Failure<bool>(ex.Message);
+            }
         }
 
-        private string VraagVanVeld()
-        {
-            // TODO implementeren
-            return "E2";
-        }
-
-        private string VraagNaarVeld()
-        {
-            // TODO implementeren
-            return "E4";
-        }
-
-        public void Speel(Move zet)
-        {
-            //TODO zet uitvoeren op het Board
-        }
-
-        public void ToonStelling()
-        {
-            //TODO Toon de stelling mbv Board
-        }
     }
 }

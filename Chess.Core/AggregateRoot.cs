@@ -3,8 +3,4 @@
     public class AggregateRoot: Entity
     {
     }
-
-
-
-
 }

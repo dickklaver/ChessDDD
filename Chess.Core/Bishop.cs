@@ -1,12 +1,11 @@
 ﻿namespace Chess.Core
 {
-    public class Queen : Piece
+    public class Bishop : Piece
     {
         List<MoveStrategy> moveStrategies = new List<MoveStrategy>();
 
-        public Queen(Square initialSquare, Player player) : base(initialSquare, player, "Q")
+        public Bishop(Square initialSquare, Player player) : base(initialSquare, player, "B")
         {
-            this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(8));
             this.moveStrategies.Add(new DiagonallMoveStrategy(8));
         }
 

@@ -6,11 +6,6 @@ namespace Chess.Core
     {
         public Entity(): base(Guid.NewGuid())
         {            
-        }
-       
+        }       
     }
-
-
-
-
 }

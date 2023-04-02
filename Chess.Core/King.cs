@@ -1,13 +1,13 @@
 ﻿namespace Chess.Core
 {
-    public class Queen : Piece
+    public class King : Piece
     {
         List<MoveStrategy> moveStrategies = new List<MoveStrategy>();
 
-        public Queen(Square initialSquare, Player player) : base(initialSquare, player, "Q")
+        public King(Square initialSquare, Player player) : base(initialSquare, player, "K")
         {
-            this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(8));
-            this.moveStrategies.Add(new DiagonallMoveStrategy(8));
+            this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(1));
+            this.moveStrategies.Add(new DiagonallMoveStrategy(1));
         }
 
         public override List<Square> GetSquaresPieceCanTheoreticallyCapture()
@@ -23,6 +23,9 @@
             {
                 squareList.AddRange(moveStrategy.GetSquaresPieceCanTheoreticallyMoveTo(this.Square));
             }
+
+            //squareList.Add(new Square(this.Square.FileNumber - 2, this.Square.RankNumber));
+            //squareList.Add(new Square(this.Square.FileNumber - 2, this.Square.RankNumber));
 
             return squareList;
         }
