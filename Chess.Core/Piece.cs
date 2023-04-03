@@ -10,7 +10,7 @@
             this.HasMoved = false;
         }
 
-        protected bool HasMoved { get; set; }
+        public bool HasMoved { get; private set; }
 
         public string NotationLetter { get; protected set; }
 
@@ -30,14 +30,14 @@
             yield return this.NotationLetter;
         }
 
-        internal void MoveTo(Square toSquare/*, Board board*/)
+        internal void MoveTo(Square toSquare)
         {
             this.Square = toSquare;
             this.HasMoved = true;
         }
 
-        public abstract List<Square> GetSquaresPieceCanTheoreticallyMoveTo();
+        public abstract bool CanMoveTo(Square toSquare, Board board);
 
-        public abstract List<Square> GetSquaresPieceCanTheoreticallyCapture();
+        public abstract bool Attacks(Square toSquare, Board board);
     }
 }

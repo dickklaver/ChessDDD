@@ -47,7 +47,7 @@ namespace Chess.Core
 
         public void MakeMove(Square fromSquare, Square toSquare)
         {
-            // todo return Move within which a string representation of the move
+            // TODO Add Move within which a string representation of the move to moves collection
             var maybePiece = this.GetPieceOn(fromSquare);
             if (maybePiece.HasNoValue)
                 throw new InvalidMoveException($"no piece on {fromSquare}");
@@ -56,7 +56,7 @@ namespace Chess.Core
             if (fromPiece.Player != this.PlayerToMove)
                 throw new InvalidMoveException($"no {this.PlayerToMove} piece on {fromSquare}");
 
-            if (!CanMoveTo(fromPiece, toSquare))
+            if (!fromPiece.CanMoveTo(toSquare, this))
                 throw new InvalidMoveException($"Cannot move from {fromSquare} to {toSquare}");
 
 
@@ -65,81 +65,19 @@ namespace Chess.Core
                 this.RemovePieceOn(toSquare);
             }
 
-            fromPiece.MoveTo(toSquare/*, this*/);
+            fromPiece.MoveTo(toSquare);
 
             this.IsWhiteToMove = !this.IsWhiteToMove;
 
             return;
         }
 
-        private bool IsCapture(Piece fromPiece, Square toSquare)
+        public ForsythEdwardsNotation ToForsythEdwardsNotation()
         {
-            var maybeToPiece = this.GetPieceOn(toSquare);
-            if (maybeToPiece.HasNoValue)
-                return false;
-
-            Piece toPiece = maybeToPiece.Value;
-            if (fromPiece.Player == toPiece.Player)
-                return false;
-
-            return true;
+            return ForsythEdwardsNotation.CreateFrom(this);
         }
 
-        private bool CanMoveTo(Piece fromPiece, Square toSquare)
-        {
-            List<Square> squares = fromPiece.GetSquaresPieceCanTheoreticallyMoveTo();
-            Maybe<Piece> maybePiece;
-            Piece piece;
-
-            if (!squares.Contains(toSquare))
-            {
-                if (fromPiece is Pawn)
-                {
-                    squares = fromPiece.GetSquaresPieceCanTheoreticallyCapture();
-                    if (!squares.Contains(toSquare))
-                        return false;
-
-                    maybePiece = this.GetPieceOn(toSquare);
-                    if (maybePiece.HasNoValue)
-                        return false;
-
-                    piece = maybePiece.Value;
-                    if (fromPiece.Player == piece.Player)
-                        return false;
-
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            if (fromPiece is Knight)
-                return true;
-
-            var squaresInbetweenAreEmpty = this.AreSquaresInBetweenEmpty(fromPiece, toSquare);
-            if (!squaresInbetweenAreEmpty)
-            {
-                return false;
-            }
-
-            maybePiece = this.GetPieceOn(toSquare);
-            if (maybePiece.HasNoValue)
-            {
-                return true;
-            }
-
-            piece = maybePiece.Value;
-            if (piece.Player == fromPiece.Player)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool AreSquaresInBetweenEmpty(Piece fromPiece, Square toSquare)
+        public bool AreSquaresInBetweenEmpty(Piece fromPiece, Square toSquare)
         {
             int rankIncrement, fileIncrement;
             (fileIncrement, rankIncrement) = DetermineDirection(fromPiece, toSquare);
@@ -156,6 +94,19 @@ namespace Chess.Core
 
                 currentSquare = new Square(currentSquare.FileNumber + fileIncrement, currentSquare.RankNumber + rankIncrement);
             }
+
+            return true;
+        }
+
+        private bool IsCapture(Piece fromPiece, Square toSquare)
+        {
+            var maybeToPiece = this.GetPieceOn(toSquare);
+            if (maybeToPiece.HasNoValue)
+                return false;
+
+            Piece toPiece = maybeToPiece.Value;
+            if (fromPiece.Player == toPiece.Player)
+                return false;
 
             return true;
         }

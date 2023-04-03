@@ -136,5 +136,13 @@ namespace Chess.Core.Tests
 
             }
         }
+
+        [Fact]
+        public void InitialBoardFenNotationShouldBeCorrect()
+        {
+            board.InitializeBoard();
+            var actualFenNotation = board.ToForsythEdwardsNotation();
+            actualFenNotation.Value.Should().Be("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        }
     }
 }

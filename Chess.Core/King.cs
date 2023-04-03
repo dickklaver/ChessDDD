@@ -10,12 +10,46 @@
             this.moveStrategies.Add(new DiagonallMoveStrategy(1));
         }
 
-        public override List<Square> GetSquaresPieceCanTheoreticallyCapture()
+        public override bool Attacks(Square toSquare, Board board)
         {
-            return this.GetSquaresPieceCanTheoreticallyMoveTo();
+            if (!this.CanMoveTo(toSquare, board))
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        public override List<Square> GetSquaresPieceCanTheoreticallyMoveTo()
+        public override bool CanMoveTo(Square toSquare, Board board)
+        {
+            List<Square> squares = this.GetSquaresPieceCanTheoreticallyMoveTo(board);
+            if (!squares.Contains(toSquare))
+            {
+                return false;
+            }
+
+            var squaresInbetweenAreEmpty = board.AreSquaresInBetweenEmpty(this, toSquare);
+            if (!squaresInbetweenAreEmpty)
+            {
+                return false;
+            }
+
+            var maybeToPiece = board.GetPieceOn(toSquare);
+            if (maybeToPiece.HasNoValue)
+            {
+                return true;
+            }
+
+            var toPiece = maybeToPiece.Value;
+            if (toPiece.Player == this.Player)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Board board)
         {
             List<Square> squareList = new List<Square>();
 
@@ -24,6 +58,7 @@
                 squareList.AddRange(moveStrategy.GetSquaresPieceCanTheoreticallyMoveTo(this.Square));
             }
 
+            //todo: castling
             //squareList.Add(new Square(this.Square.FileNumber - 2, this.Square.RankNumber));
             //squareList.Add(new Square(this.Square.FileNumber - 2, this.Square.RankNumber));
 

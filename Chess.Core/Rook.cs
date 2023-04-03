@@ -9,12 +9,46 @@
             this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(8));
         }
 
-        public override List<Square> GetSquaresPieceCanTheoreticallyCapture()
+        public override bool Attacks(Square toSquare, Board board)
         {
-            return this.GetSquaresPieceCanTheoreticallyMoveTo();
+            if (!this.CanMoveTo(toSquare, board))
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        public override List<Square> GetSquaresPieceCanTheoreticallyMoveTo()
+        public override bool CanMoveTo(Square toSquare, Board board)
+        {
+            List<Square> squares = this.GetSquaresPieceCanTheoreticallyMoveTo(board);
+            if (!squares.Contains(toSquare))
+            {
+                return false;
+            }
+
+            var squaresInbetweenAreEmpty = board.AreSquaresInBetweenEmpty(this, toSquare);
+            if (!squaresInbetweenAreEmpty)
+            {
+                return false;
+            }
+
+            var maybePiece = board.GetPieceOn(toSquare);
+            if (maybePiece.HasNoValue)
+            {
+                return true;
+            }
+
+            var piece = maybePiece.Value;
+            if (piece.Player == this.Player)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Board board)
         {
             List<Square> squareList = new List<Square>();
 
