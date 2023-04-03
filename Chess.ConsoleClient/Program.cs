@@ -1,19 +1,25 @@
-﻿using Chess.Core;
+﻿using Chess.ApplicationServices;
+using Chess.Core;
+using Chess.Infrastructure;
 
-namespace Chess 
+using CSharpFunctionalExtensions;
+
+namespace Chess
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            var game = new Game();
-            Show(game.Board);
+            GameService gameService = new GameService(new GameRepository());
+            Show(gameService.GetBoard());
+            var gameHasEnded = false;
+
             // TODO detect when game is over
-            while (true)
+            while (!gameHasEnded)
             {
                 var from = AcceptSquare("From field (e.g. e2): ");
-                var to   = AcceptSquare("To   field (e.g. e4): ");
-                var moveMadeResult = game.MakeMove(from, to);
+                var to = AcceptSquare("To   field (e.g. e4): ");
+                var moveMadeResult = gameService.MakeMove(from, to);
                 if (moveMadeResult.IsFailure)
                 {
                     var originalForegroundColor = Console.ForegroundColor;
@@ -22,8 +28,10 @@ namespace Chess
                     Console.ForegroundColor = originalForegroundColor;
                 }
 
-                Show(game.Board);
+                Show(gameService.GetBoard());
             }
+
+            gameService.SaveGame();
         }
 
         private static string AcceptSquare(string prompt)
@@ -49,7 +57,7 @@ namespace Chess
             }
         }
 
-        private static void Show(Board board)
+        private static void Show(BoardDto board)
         {
             Console.WriteLine();
             Console.WriteLine();
@@ -66,13 +74,12 @@ namespace Chess
 
                 for (int file = 1; file <= 8; file++)
                 {
-                    Console.BackgroundColor = fieldIsDark? ConsoleColor.DarkGreen : ConsoleColor.White;
+                    Console.BackgroundColor = fieldIsDark ? ConsoleColor.DarkGreen : ConsoleColor.White;
                     Console.BackgroundColor = fieldIsDark ? ConsoleColor.DarkRed : ConsoleColor.DarkYellow;
-                    Square square = new Square(file, rank);
-                    var maybePiece = board.GetPieceOn(square);
+                    var maybePiece = GetPieceOn(board, file, rank);
                     if (maybePiece.HasValue)
                     {
-                        Piece piece = maybePiece.Value;
+                        PieceDto piece = maybePiece.Value;
                         ShowPiece(piece);
                     }
                     else
@@ -90,13 +97,20 @@ namespace Chess
 
             showFiles();
             Console.WriteLine("|====================|");
-            Console.WriteLine(board.IsWhiteToMove? "White to move": "Black to move");
+            Console.WriteLine(board.IsWhiteToMove ? "White to move" : "Black to move");
         }
 
-        private static void ShowPiece(Piece piece)
+        private static Maybe<PieceDto> GetPieceOn(BoardDto board, int file, int rank)
+        {
+            var fileLetters = "abcdefgh";
+            var maybePiece = board.Pieces.Where(p => p.Square == fileLetters.Substring(file - 1, 1) + rank.ToString()).SingleOrDefault().AsMaybe();
+            return maybePiece;
+        }
+
+        private static void ShowPiece(PieceDto piece)
         {
             var originalColor = Console.ForegroundColor;
-            if (piece.Player == Player.White)
+            if (piece.Player == "White")
             {
                 Console.ForegroundColor = ConsoleColor.White;
             }
@@ -105,7 +119,7 @@ namespace Chess
                 Console.ForegroundColor = ConsoleColor.Black;
             }
 
-            Console.Write(piece.ToString() + " ");
+            Console.Write(piece.NotationLetter.ToString() + " ");
             Console.ForegroundColor = originalColor;
         }
 

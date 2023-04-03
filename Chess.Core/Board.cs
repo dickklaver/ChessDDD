@@ -8,11 +8,8 @@ namespace Chess.Core
 
         public Board()
         {
-            this.BoardId = new BoardId();
             this.IsWhiteToMove = true;
         }
-
-        public BoardId BoardId { get; private set; }
 
         public bool IsWhiteToMove { get; set; }
 

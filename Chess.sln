@@ -7,7 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess.Core", "Chess.Core\Ch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess.Core.Tests", "Chess.Core.Tests\Chess.Core.Tests.csproj", "{A8FB52AC-2C71-4946-8A96-D7D783465AD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.ConsoleClient", "Chess.ConsoleClient\Chess.ConsoleClient.csproj", "{C2216A36-95AA-478D-92A3-6D7309E5E5C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess.ConsoleClient", "Chess.ConsoleClient\Chess.ConsoleClient.csproj", "{C2216A36-95AA-478D-92A3-6D7309E5E5C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.ApplicationServices", "Chess.ApplicationServices\Chess.ApplicationServices.csproj", "{6767C89F-4D83-4479-86C0-26DFAC8E30D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Core", "1. Core", "{672D79A3-2CC3-46A5-8D37-0070D35AE7BC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Application Services", "2. Application Services", "{E6AC444E-C571-4EB4-BDF9-5F954C5F8687}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Infrastructure", "3. Infrastructure", "{BBBA6152-DD14-4B8B-8C54-198D4007F90D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.Infrastructure", "Chess.Infrastructure\Chess.Infrastructure.csproj", "{FAAC5AFE-B8F2-42B4-8689-38B69AED7F7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +37,24 @@ Global
 		{C2216A36-95AA-478D-92A3-6D7309E5E5C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2216A36-95AA-478D-92A3-6D7309E5E5C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2216A36-95AA-478D-92A3-6D7309E5E5C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6767C89F-4D83-4479-86C0-26DFAC8E30D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6767C89F-4D83-4479-86C0-26DFAC8E30D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6767C89F-4D83-4479-86C0-26DFAC8E30D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6767C89F-4D83-4479-86C0-26DFAC8E30D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAAC5AFE-B8F2-42B4-8689-38B69AED7F7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAAC5AFE-B8F2-42B4-8689-38B69AED7F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAAC5AFE-B8F2-42B4-8689-38B69AED7F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAAC5AFE-B8F2-42B4-8689-38B69AED7F7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5E4B1AAA-C83C-422A-A01E-F68B0BF5A0EF} = {672D79A3-2CC3-46A5-8D37-0070D35AE7BC}
+		{A8FB52AC-2C71-4946-8A96-D7D783465AD3} = {672D79A3-2CC3-46A5-8D37-0070D35AE7BC}
+		{C2216A36-95AA-478D-92A3-6D7309E5E5C9} = {BBBA6152-DD14-4B8B-8C54-198D4007F90D}
+		{6767C89F-4D83-4479-86C0-26DFAC8E30D7} = {E6AC444E-C571-4EB4-BDF9-5F954C5F8687}
+		{FAAC5AFE-B8F2-42B4-8689-38B69AED7F7E} = {BBBA6152-DD14-4B8B-8C54-198D4007F90D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2CBDDEED-0837-4821-BEF0-B301599EEB63}
