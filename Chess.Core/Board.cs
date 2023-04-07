@@ -10,8 +10,6 @@ namespace Chess.Core
         private readonly List<Square> unmovedSquares = new List<Square>();
         private readonly Dictionary<Square, Piece> piecesOnSquares = new Dictionary<Square, Piece>();
 
-        protected List<Piece> __pieces = new List<Piece>();
-
         public Board()
         {
             IsWhiteToMove = true;
@@ -31,7 +29,14 @@ namespace Chess.Core
         {
             get
             {
-                return new ReadOnlyCollection<Piece>(this.__pieces);
+                var pieces = new Collection<Piece>();
+                foreach (var item in this.piecesOnSquares)
+                {
+                    Piece piece = item.Value;
+                    pieces.Add(piece);
+                }
+
+                return new ReadOnlyCollection<Piece>(pieces);
             }
         }
 
@@ -210,7 +215,7 @@ namespace Chess.Core
             }
 
             Piece piece = maybePiece.Value;
-            this.__pieces.Remove(piece);
+            this.piecesOnSquares.Remove(square);
         }
 
         private void InitializeWhiteBackrank()
@@ -228,7 +233,6 @@ namespace Chess.Core
 
         protected void AddPieceToBoard(Piece piece, Square square, bool hasMoved)
         {
-            this.__pieces.Add(piece);
             this.piecesOnSquares.Add(square, piece);
             if (!hasMoved)
             {

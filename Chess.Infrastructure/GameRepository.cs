@@ -15,7 +15,7 @@ namespace Chess.Infrastructure
         {
             //TODO
             Console.WriteLine("Reading game from database");
-            return null;
+            return new List<GameDto>();
         }
 
         public GameDto InstantiateGameFromDatabase(Guid key)
