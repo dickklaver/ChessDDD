@@ -20,8 +20,8 @@ namespace Chess.Core.Tests
             {
                 board = new TestableBoard();
                 // Square initialSquare, Player player
-                board.AddPiece(new Pawn(new Square("e2"), Player.White));
-                board.AddPiece(new Pawn(new Square("a7"), Player.Black));
+                board.AddPiece(new PieceOnSquare(new Pawn(Player.White), new Square("e2")));
+                board.AddPiece(new PieceOnSquare(new Pawn(Player.Black), new Square("a7")));
             }
 
             [Fact]
@@ -51,7 +51,7 @@ namespace Chess.Core.Tests
             [Fact]
             public void CannotMoveIfTheresAPieceInTheWay()
             {
-                board.AddPiece(new Knight(new Square("e3"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Knight(Player.White), new Square("e3")));
                 board.Invoking(y => y.MakeMove(new Square("e2"), new Square("e3")))
                     .Should().Throw<BusinessRuleViolationException>()
                     .Where(x => x.Violations.Contains(new BusinessRuleViolation("Cannot move from e2 to e3")));
@@ -66,7 +66,7 @@ namespace Chess.Core.Tests
             {
                 board = new TestableBoard();
                 // Square initialSquare, Player player
-                board.AddPiece(new Knight(new Square("e4"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Knight(Player.White), new Square("e4")));
             }
 
             [Fact]
@@ -130,64 +130,64 @@ namespace Chess.Core.Tests
             [Fact]
             public void CanMoveDiagonallyUpRight1()
             {
-                board.AddPiece(new Bishop(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Bishop(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("b2"));
             }
 
             [Fact]
             public void CanMoveDiagonallyUpRight7()
             {
-                board.AddPiece(new Bishop(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Bishop(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("h8"));
             }
 
             [Fact]
             public void CanMoveDiagonallyUpLeft1()
             {
-                board.AddPiece(new Bishop(new Square("h1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Bishop(Player.White), new Square("h1")));
                 board.MakeMove(new Square("h1"), new Square("g2"));
             }
 
             [Fact]
             public void CanMoveDiagonallyUpLeft7()
             {
-                board.AddPiece(new Bishop(new Square("h1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Bishop(Player.White), new Square("h1")));
                 board.MakeMove(new Square("h1"), new Square("a8"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownRight1()
             {
-                board.AddPiece(new Bishop(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Bishop(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("b7"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownRight7()
             {
-                board.AddPiece(new Bishop(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Bishop(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("h1"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownLeft1()
             {
-                board.AddPiece(new Bishop(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Bishop(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("g7"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownLeft7()
             {
-                board.AddPiece(new Bishop(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Bishop(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("a1"));
             }
 
             [Fact]
             public void CannotMoveIfTheresAPieceInTheWay()
             {
-                board.AddPiece(new Bishop(new Square("h8"), Player.White));
-                board.AddPiece(new Knight(new Square("g7"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Bishop(Player.White), new Square("h8")));
+                board.AddPiece(new PieceOnSquare(new Knight(Player.White), new Square("g7")));
                 board.Invoking(y => y.MakeMove(new Square("h8"), new Square("g7")))
                     .Should().Throw<BusinessRuleViolationException>()
                     .Where(x => x.Violations.Contains(new BusinessRuleViolation("Cannot move from h8 to g7")));
@@ -206,64 +206,64 @@ namespace Chess.Core.Tests
             [Fact]
             public void CanMoveUp1()
             {
-                board.AddPiece(new Rook(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("a2"));
             }
 
             [Fact]
             public void CanMoveUp7()
             {
-                board.AddPiece(new Rook(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("a8"));
             }
 
             [Fact]
             public void CanMoveRight1()
             {
-                board.AddPiece(new Rook(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("b1"));
             }
 
             [Fact]
             public void CanMoveRight7()
             {
-                board.AddPiece(new Rook(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("h1"));
             }
 
             [Fact]
             public void CanMoveDown1()
             {
-                board.AddPiece(new Rook(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("a7"));
             }
 
             [Fact]
             public void CanMoveDown7()
             {
-                board.AddPiece(new Rook(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("a1"));
             }
 
             [Fact]
             public void CanMoveLeft1()
             {
-                board.AddPiece(new Rook(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("g8"));
             }
 
             [Fact]
             public void CanMoveLeft7()
             {
-                board.AddPiece(new Rook(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("a8"));
             }
 
             [Fact]
             public void CannotMoveIfTheresAPieceInTheWay()
             {
-                board.AddPiece(new Rook(new Square("h8"), Player.White));
-                board.AddPiece(new Knight(new Square("g8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("h8")));
+                board.AddPiece(new PieceOnSquare(new Knight(Player.White), new Square("g8")));
                 board.Invoking(y => y.MakeMove(new Square("h8"), new Square("a8")))
                     .Should().Throw<BusinessRuleViolationException>()
                     .Where(x => x.Violations.Contains(new BusinessRuleViolation("Cannot move from h8 to a8")));
@@ -282,112 +282,112 @@ namespace Chess.Core.Tests
             [Fact]
             public void CanMoveDiagonallyUpRight1()
             {
-                board.AddPiece(new Queen(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("b2"));
             }
 
             [Fact]
             public void CanMoveDiagonallyUpRight7()
             {
-                board.AddPiece(new Queen(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("h8"));
             }
 
             [Fact]
             public void CanMoveDiagonallyUpLeft1()
             {
-                board.AddPiece(new Queen(new Square("h1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("h1")));
                 board.MakeMove(new Square("h1"), new Square("g2"));
             }
 
             [Fact]
             public void CanMoveDiagonallyUpLeft7()
             {
-                board.AddPiece(new Queen(new Square("h1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("h1")));
                 board.MakeMove(new Square("h1"), new Square("a8"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownRight1()
             {
-                board.AddPiece(new Queen(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("b7"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownRight7()
             {
-                board.AddPiece(new Queen(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("h1"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownLeft1()
             {
-                board.AddPiece(new Queen(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("g7"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownLeft7()
             {
-                board.AddPiece(new Queen(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("a1"));
             }
 
             [Fact]
             public void CanMoveUp1()
             {
-                board.AddPiece(new Queen(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("a2"));
             }
 
             [Fact]
             public void CanMoveUp7()
             {
-                board.AddPiece(new Queen(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("a8"));
             }
 
             [Fact]
             public void CanMoveRight1()
             {
-                board.AddPiece(new Queen(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("b1"));
             }
 
             [Fact]
             public void CanMoveRight7()
             {
-                board.AddPiece(new Queen(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("h1"));
             }
 
             [Fact]
             public void CanMoveDown1()
             {
-                board.AddPiece(new Queen(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("a7"));
             }
 
             [Fact]
             public void CanMoveDown7()
             {
-                board.AddPiece(new Queen(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("a1"));
             }
 
             [Fact]
             public void CanMoveLeft1()
             {
-                board.AddPiece(new Queen(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Queen(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("g8"));
             }
 
             [Fact]
             public void CanMoveLeft7()
             {
-                board.AddPiece(new Rook(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new Rook(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("a8"));
             }
         }
@@ -406,56 +406,56 @@ namespace Chess.Core.Tests
             [Fact]
             public void CanMoveDiagonallyUpRight1()
             {
-                board.AddPiece(new King(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new King(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("b2"));
             }
 
             [Fact]
             public void CanMoveDiagonallyUpLeft1()
             {
-                board.AddPiece(new King(new Square("h1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new King(Player.White), new Square("h1")));
                 board.MakeMove(new Square("h1"), new Square("g2"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownRight1()
             {
-                board.AddPiece(new King(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new King(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("b7"));
             }
 
             [Fact]
             public void CanMoveDiagonallyDownLeft1()
             {
-                board.AddPiece(new King(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new King(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("g7"));
             }
 
             [Fact]
             public void CanMoveUp1()
             {
-                board.AddPiece(new King(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new King(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("a2"));
             }
 
             [Fact]
             public void CanMoveRight1()
             {
-                board.AddPiece(new King(new Square("a1"), Player.White));
+                board.AddPiece(new PieceOnSquare(new King(Player.White), new Square("a1")));
                 board.MakeMove(new Square("a1"), new Square("b1"));
             }
 
             [Fact]
             public void CanMoveDown1()
             {
-                board.AddPiece(new King(new Square("a8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new King(Player.White), new Square("a8")));
                 board.MakeMove(new Square("a8"), new Square("a7"));
             }
 
             [Fact]
             public void CanMoveLeft1()
             {
-                board.AddPiece(new King(new Square("h8"), Player.White));
+                board.AddPiece(new PieceOnSquare(new King(Player.White), new Square("h8")));
                 board.MakeMove(new Square("h8"), new Square("g8"));
             }
         }

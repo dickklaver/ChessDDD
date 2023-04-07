@@ -20,7 +20,7 @@ namespace Chess.Core.Tests
         public void PiecesCollectionIsReadonly()
         {
             board.Initialize();
-            board.__Pieces.Should().BeOfType<ReadOnlyCollection<Piece>>();
+            board.PiecesOnSquares.Should().BeOfType<ReadOnlyCollection<PieceOnSquare>>();
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Chess.Core.Tests
         [Fact]
         public void CanCallGetPieceOn_OnSquareWithPieceOnIt()
         {
-            this.board.AddPiece(new Pawn(new Square("e4"), Player.White));
+            this.board.AddPiece(new PieceOnSquare(new Pawn(Player.White), new Square("e4")));
             var result = board.GetPieceOn(new Square("e4"));
             result.HasValue.Should().BeTrue();
             result.Value.GetType().Should().Be(typeof(Pawn));

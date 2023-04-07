@@ -22,7 +22,7 @@
             }
 
             Piece piece = this.maybePiece.Value;
-            if (!piece.CanMoveTo(this.toSquare, this.board))
+            if (!piece.CanMoveTo(fromSquare, toSquare, this.board))
             {
                 yield return new BusinessRuleViolation($"Cannot move from {this.fromSquare} to {this.toSquare}");
             }

@@ -4,12 +4,10 @@
     {
         public class TestableBoard : Board 
         {
-            public void AddPiece(Piece piece)
+            public void AddPiece(PieceOnSquare pieceOnSquare)
             {
-                this.AddPieceToBoard(piece, piece.Square, false);
+                this.AddPieceToBoard(pieceOnSquare, false);
             }
         }
     }
-
-
 }

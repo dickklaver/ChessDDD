@@ -57,17 +57,32 @@
             result += board.IsWhiteToMove ? " w" : " b";
 
             // castling possibilities
-            var maybeKing = board.GetPieceOn(new Square("e1"));
-            var maybeQueensideRook = board.GetPieceOn(new Square("a1"));
-            var maybeKingsideRook = board.GetPieceOn(new Square("h1"));
-            var whiteCanKingsideCastle = maybeKing.HasValue && !maybeKing.Value.HasMoved && maybeKingsideRook.HasValue && !maybeKingsideRook.Value.HasMoved;
-            var whiteCanQueensideCastle = maybeKing.HasValue && !maybeKing.Value.HasMoved && maybeQueensideRook.HasValue && !maybeQueensideRook.Value.HasMoved;
+            var whiteKingInitialSquare = new Square("e1");
+            var maybeKing = board.GetPieceOn(whiteKingInitialSquare);
 
-            maybeKing = board.GetPieceOn(new Square("e8"));
-            maybeQueensideRook = board.GetPieceOn(new Square("a8"));
-            maybeKingsideRook = board.GetPieceOn(new Square("h8"));
-            var blackCanKingsideCastle = maybeKing.HasValue && !maybeKing.Value.HasMoved && maybeKingsideRook.HasValue && !maybeKingsideRook.Value.HasMoved;
-            var blackCanQueensideCastle = maybeKing.HasValue && !maybeKing.Value.HasMoved && maybeQueensideRook.HasValue && !maybeQueensideRook.Value.HasMoved;
+            var whiteQueensideRookInitialSquare = new Square("a1");
+            var maybeQueensideRook = board.GetPieceOn(whiteQueensideRookInitialSquare);
+
+            Square whiteKingsideRookInitialSquare = new Square("h1");
+            var maybeKingsideRook = board.GetPieceOn(whiteKingsideRookInitialSquare);
+
+            var whiteCanKingsideCastle = maybeKing.HasValue && !board.HasPieceOnSquareMoved(whiteKingInitialSquare)  && maybeKingsideRook.HasValue && !board.HasPieceOnSquareMoved(whiteKingsideRookInitialSquare);
+            var whiteCanQueensideCastle = maybeKing.HasValue && !board.HasPieceOnSquareMoved(whiteKingInitialSquare) && maybeQueensideRook.HasValue && !board.HasPieceOnSquareMoved(whiteQueensideRookInitialSquare);
+
+
+            Square blackKingInitialSquare = new Square("e8");
+            maybeKing = board.GetPieceOn(blackKingInitialSquare);
+
+            Square blackQueensideRookInitialSquare = new Square("a8");
+            maybeQueensideRook = board.GetPieceOn(blackQueensideRookInitialSquare);
+
+            Square blackKingsideRookInitialSquare = new Square("h8");
+            maybeKingsideRook = board.GetPieceOn(blackKingsideRookInitialSquare);
+
+
+
+            var blackCanKingsideCastle = maybeKing.HasValue && !board.HasPieceOnSquareMoved(blackKingInitialSquare) && maybeKingsideRook.HasValue && !board.HasPieceOnSquareMoved(blackKingsideRookInitialSquare);
+            var blackCanQueensideCastle = maybeKing.HasValue && !board.HasPieceOnSquareMoved(blackKingInitialSquare) && maybeQueensideRook.HasValue && !board.HasPieceOnSquareMoved(blackQueensideRookInitialSquare);
 
             if (!whiteCanKingsideCastle && !whiteCanQueensideCastle && !blackCanKingsideCastle && !blackCanQueensideCastle)
             {

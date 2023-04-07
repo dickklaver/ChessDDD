@@ -8,7 +8,7 @@ namespace Chess.Core
     public class Board : Entity
     {
         private readonly List<Square> unmovedSquares = new List<Square>();
-        private readonly Dictionary<Square, Piece> piecesOnSquares = new Dictionary<Square, Piece>();
+        private readonly Dictionary<Square, PieceOnSquare> piecesOnSquares = new Dictionary<Square, PieceOnSquare>();
 
         public Board()
         {
@@ -32,11 +32,26 @@ namespace Chess.Core
                 var pieces = new Collection<Piece>();
                 foreach (var item in this.piecesOnSquares)
                 {
-                    Piece piece = item.Value;
+                    Piece piece = item.Value.Piece;
                     pieces.Add(piece);
                 }
 
                 return new ReadOnlyCollection<Piece>(pieces);
+            }
+        }
+
+        public IReadOnlyCollection<PieceOnSquare> PiecesOnSquares
+        {
+            get
+            {
+                var piecesOnSquares = new Collection<PieceOnSquare>();
+                foreach (var item in this.piecesOnSquares)
+                {
+                    var pieceOnSquare = item.Value;
+                    piecesOnSquares.Add(pieceOnSquare);
+                }
+
+                return new ReadOnlyCollection<PieceOnSquare>(piecesOnSquares);
             }
         }
 
@@ -61,7 +76,7 @@ namespace Chess.Core
                 return Maybe<Piece>.None;
             }
 
-            Piece piece = this.piecesOnSquares[square];
+            Piece piece = this.piecesOnSquares[square].Piece;
             return piece.AsMaybe();
         }
 
@@ -82,7 +97,7 @@ namespace Chess.Core
                 RemovePieceOn(toSquare);
             }
 
-            MoveTo(fromPiece, toSquare);
+            MoveTo(fromPiece, fromSquare, toSquare);
 
             Square? sq = this.unmovedSquares.Where(s => s == fromSquare).SingleOrDefault();
             if (sq != null)
@@ -95,15 +110,13 @@ namespace Chess.Core
             return;
         }
 
-        private void MoveTo(Piece fromPiece, Square toSquare)
+        private void MoveTo(Piece fromPiece, Square fromSquare, Square toSquare)
         {
-            if (!this.piecesOnSquares.ContainsKey(fromPiece.Square))
+            if (!this.piecesOnSquares.ContainsKey(fromSquare))
                 return;
 
-            fromPiece.MoveTo(toSquare);
-
-            this.piecesOnSquares.Remove(fromPiece.Square);
-            this.piecesOnSquares.Add(toSquare, fromPiece);
+            this.piecesOnSquares.Remove(fromSquare);
+            this.piecesOnSquares.Add(toSquare, new PieceOnSquare(fromPiece, toSquare));
         }
 
         public ForsythEdwardsNotation ToForsythEdwardsNotation()
@@ -111,13 +124,13 @@ namespace Chess.Core
             return ForsythEdwardsNotation.CreateFrom(this);
         }
 
-        public bool AreSquaresInBetweenEmpty(Piece fromPiece, Square toSquare)
+        public bool AreSquaresInBetweenEmpty(Piece fromPiece, Square fromSquare, Square toSquare)
         {
             int rankIncrement, fileIncrement;
-            (fileIncrement, rankIncrement) = DetermineDirection(fromPiece, toSquare);
+            (fileIncrement, rankIncrement) = DetermineDirection(fromSquare, toSquare);
 
             Maybe<Piece> maybePiece;
-            Square currentSquare = new Square(fromPiece.Square.FileNumber + fileIncrement, fromPiece.Square.RankNumber + rankIncrement);
+            Square currentSquare = new Square(fromSquare.FileNumber + fileIncrement, fromSquare.RankNumber + rankIncrement);
             while (currentSquare != toSquare)
             {
                 maybePiece = GetPieceOn(currentSquare);
@@ -149,54 +162,54 @@ namespace Chess.Core
             return true;
         }
 
-        private (int fileIncrement, int rankIncrement) DetermineDirection(Piece fromPiece, Square toSquare)
+        private (int fileIncrement, int rankIncrement) DetermineDirection(Square fromSquare, Square toSquare)
         {
             int rankIncrement = 0;
             int fileIncrement = 0;
 
-            if (fromPiece.Square.FileNumber == toSquare.FileNumber && fromPiece.Square.RankNumber < toSquare.RankNumber)
+            if (fromSquare.FileNumber == toSquare.FileNumber && fromSquare.RankNumber < toSquare.RankNumber)
             {
                 // North
                 rankIncrement = 1;
                 fileIncrement = 0;
             }
-            else if (fromPiece.Square.FileNumber < toSquare.FileNumber && fromPiece.Square.RankNumber < toSquare.RankNumber)
+            else if (fromSquare.FileNumber < toSquare.FileNumber && fromSquare.RankNumber < toSquare.RankNumber)
             {
                 // North East
                 rankIncrement = 1;
                 fileIncrement = 1;
             }
-            else if (fromPiece.Square.FileNumber < toSquare.FileNumber && fromPiece.Square.RankNumber == toSquare.RankNumber)
+            else if (fromSquare.FileNumber < toSquare.FileNumber && fromSquare.RankNumber == toSquare.RankNumber)
             {
                 // East
                 rankIncrement = 0;
                 fileIncrement = 1;
             }
-            else if (fromPiece.Square.FileNumber < toSquare.FileNumber && fromPiece.Square.RankNumber > toSquare.RankNumber)
+            else if (fromSquare.FileNumber < toSquare.FileNumber && fromSquare.RankNumber > toSquare.RankNumber)
             {
                 // South East
                 rankIncrement = -1;
                 fileIncrement = 1;
             }
-            else if (fromPiece.Square.FileNumber == toSquare.FileNumber && fromPiece.Square.RankNumber > toSquare.RankNumber)
+            else if (fromSquare.FileNumber == toSquare.FileNumber && fromSquare.RankNumber > toSquare.RankNumber)
             {
                 // South
                 rankIncrement = -1;
                 fileIncrement = 0;
             }
-            else if (fromPiece.Square.FileNumber > toSquare.FileNumber && fromPiece.Square.RankNumber > toSquare.RankNumber)
+            else if (fromSquare.FileNumber > toSquare.FileNumber && fromSquare.RankNumber > toSquare.RankNumber)
             {
                 // South West
                 rankIncrement = -1;
                 fileIncrement = -1;
             }
-            else if (fromPiece.Square.FileNumber > toSquare.FileNumber && fromPiece.Square.RankNumber == toSquare.RankNumber)
+            else if (fromSquare.FileNumber > toSquare.FileNumber && fromSquare.RankNumber == toSquare.RankNumber)
             {
                 // West
                 rankIncrement = 0;
                 fileIncrement = -1;
             }
-            else if (fromPiece.Square.FileNumber > toSquare.FileNumber && fromPiece.Square.RankNumber < toSquare.RankNumber)
+            else if (fromSquare.FileNumber > toSquare.FileNumber && fromSquare.RankNumber < toSquare.RankNumber)
             {
                 // North West
                 rankIncrement = 1;
@@ -221,22 +234,24 @@ namespace Chess.Core
         private void InitializeWhiteBackrank()
         {
             Square? whiteKingSquare = new Square(5, 1);
-            AddPieceToBoard(new King(whiteKingSquare, Player.White), whiteKingSquare, false);
+            PieceOnSquare pieceOnSquare = new PieceOnSquare(new King(Player.White), whiteKingSquare);
+            AddPieceToBoard(pieceOnSquare, false);
 
             Square whiteQueenSquare = new Square(4, 1);
-            AddPieceToBoard(new Queen(whiteQueenSquare, Player.White), whiteQueenSquare, false);
+            pieceOnSquare = new PieceOnSquare(new Queen(Player.White), whiteQueenSquare);
+            AddPieceToBoard(pieceOnSquare, false);
 
             InitializeWhiteRooks();
             InitializeWhiteBishops();
             InitializeWhiteKnights();
         }
 
-        protected void AddPieceToBoard(Piece piece, Square square, bool hasMoved)
+        protected void AddPieceToBoard(PieceOnSquare pieceOnSquare, bool hasMoved)
         {
-            this.piecesOnSquares.Add(square, piece);
+            this.piecesOnSquares.Add(pieceOnSquare.Square, pieceOnSquare);
             if (!hasMoved)
             {
-                this.unmovedSquares.Add(square);
+                this.unmovedSquares.Add(pieceOnSquare.Square);
             }
         }
 
@@ -245,7 +260,7 @@ namespace Chess.Core
             for (int fileNumber = 1; fileNumber <= 8; fileNumber++)
             {
                 Square? pawnSquare = new Square(fileNumber, 2);
-                AddPieceToBoard(new Pawn(pawnSquare, Player.White), pawnSquare, false);
+                AddPieceToBoard(new PieceOnSquare(new Pawn(Player.White), pawnSquare), false);
             }
         }
 
@@ -254,17 +269,17 @@ namespace Chess.Core
             for (int fileNumber = 1; fileNumber <= 8; fileNumber++)
             {
                 Square? pawnSquare = new Square(fileNumber, 7);
-                AddPieceToBoard(new Pawn(pawnSquare, Player.Black), pawnSquare, false);
+                AddPieceToBoard(new PieceOnSquare(new Pawn(Player.Black), pawnSquare), false);
             }
         }
 
         private void InitializeBlackBackrank()
         {
             Square? blackKingSquare = new Square(5, 8);
-            AddPieceToBoard(new King(blackKingSquare, Player.Black), blackKingSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new King(Player.Black), blackKingSquare), false);
 
             Square? blackQueenSquare = new Square(4, 8);
-            AddPieceToBoard(new Queen(blackQueenSquare, Player.Black), blackQueenSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Queen(Player.Black), blackQueenSquare), false);
 
             InitializeBlackRooks();
             InitializeBlackBishops();
@@ -274,55 +289,55 @@ namespace Chess.Core
         private void InitializeWhiteRooks()
         {
             Square initialSquare = new Square(1, 1);
-            AddPieceToBoard(new Rook(initialSquare, Player.White), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Rook(Player.White), initialSquare), false);
 
             initialSquare = new Square(8, 1);
-            AddPieceToBoard(new Rook(initialSquare, Player.White), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Rook(Player.White), initialSquare), false);
         }
 
         private void InitializeWhiteBishops()
         {
             Square initialSquare = new Square(3, 1);
-            AddPieceToBoard(new Bishop(initialSquare, Player.White), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Bishop(Player.White), initialSquare), false);
 
             initialSquare = new Square(6, 1);
-            AddPieceToBoard(new Bishop(initialSquare, Player.White), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Bishop(Player.White), initialSquare), false);
         }
 
         private void InitializeWhiteKnights()
         {
             Square initialSquare = new Square(2, 1);
-            AddPieceToBoard(new Knight(initialSquare, Player.White), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Knight(Player.White), initialSquare), false);
 
             initialSquare = new Square(7, 1);
-            AddPieceToBoard(new Knight(initialSquare, Player.White), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Knight(Player.White), initialSquare), false);
         }
 
         private void InitializeBlackRooks()
         {
             Square initialSquare = new Square(1, 8);
-            AddPieceToBoard(new Rook(initialSquare, Player.Black), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Rook(Player.Black), initialSquare), false);
 
             initialSquare = new Square(8, 8);
-            AddPieceToBoard(new Rook(initialSquare, Player.Black), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Rook(Player.Black), initialSquare), false);
         }
 
         private void InitializeBlackBishops()
         {
             Square initialSquare = new Square(3, 8);
-            AddPieceToBoard(new Bishop(initialSquare, Player.Black), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Bishop(Player.Black), initialSquare), false);
 
             initialSquare = new Square(6, 8);
-            AddPieceToBoard(new Bishop(initialSquare, Player.Black), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Bishop(Player.Black), initialSquare), false);
         }
 
         private void InitializeBlackKnights()
         {
             Square initialSquare = new Square(2, 8);
-            AddPieceToBoard(new Knight(initialSquare, Player.Black), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Knight(Player.Black), initialSquare), false);
 
             initialSquare = new Square(7, 8);
-            AddPieceToBoard(new Knight(initialSquare, Player.Black), initialSquare, false);
+            AddPieceToBoard(new PieceOnSquare(new Knight(Player.Black), initialSquare), false);
         }
     }
 }

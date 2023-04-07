@@ -76,11 +76,11 @@ namespace Chess
                 {
                     Console.BackgroundColor = fieldIsDark ? ConsoleColor.DarkGreen : ConsoleColor.White;
                     Console.BackgroundColor = fieldIsDark ? ConsoleColor.DarkRed : ConsoleColor.DarkYellow;
-                    var maybePiece = GetPieceOn(board, file, rank);
-                    if (maybePiece.HasValue)
+                    var maybePieceOnSquare = GetPieceOn(board, file, rank);
+                    if (maybePieceOnSquare.HasValue)
                     {
-                        PieceDto piece = maybePiece.Value;
-                        ShowPiece(piece);
+                        var pieceOnSquare = maybePieceOnSquare.Value;
+                        ShowPiece(pieceOnSquare);
                     }
                     else
                     {
@@ -100,17 +100,17 @@ namespace Chess
             Console.WriteLine(board.IsWhiteToMove ? "White to move" : "Black to move");
         }
 
-        private static Maybe<PieceDto> GetPieceOn(BoardDto board, int file, int rank)
+        private static Maybe<PieceOnSquareDto> GetPieceOn(BoardDto board, int file, int rank)
         {
             var fileLetters = "abcdefgh";
-            var maybePiece = board.Pieces.Where(p => p.Square == fileLetters.Substring(file - 1, 1) + rank.ToString()).SingleOrDefault().AsMaybe();
+            var maybePiece = board.PiecesOnSquares.Where(p => p.Square == fileLetters.Substring(file - 1, 1) + rank.ToString()).SingleOrDefault().AsMaybe();
             return maybePiece;
         }
 
-        private static void ShowPiece(PieceDto piece)
+        private static void ShowPiece(PieceOnSquareDto pieceOnSquare)
         {
             var originalColor = Console.ForegroundColor;
-            if (piece.Player == "White")
+            if (pieceOnSquare.Player == "White")
             {
                 Console.ForegroundColor = ConsoleColor.White;
             }
@@ -119,7 +119,7 @@ namespace Chess
                 Console.ForegroundColor = ConsoleColor.Black;
             }
 
-            Console.Write(piece.NotationLetter.ToString() + " ");
+            Console.Write(pieceOnSquare.NotationLetter.ToString() + " ");
             Console.ForegroundColor = originalColor;
         }
 

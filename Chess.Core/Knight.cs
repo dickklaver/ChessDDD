@@ -2,13 +2,13 @@
 {
     public class Knight : Piece
     {
-        public Knight(Square initialSquare, Player player) : base(initialSquare, player, "N")
+        public Knight(Player player) : base(player, "N")
         {
         }
 
-        public override bool Attacks(Square toSquare, Board board)
+        public override bool Attacks(Square fromSquare, Square toSquare, Board board)
         {
-            if (!this.CanMoveTo(toSquare, board))
+            if (!this.CanMoveTo(fromSquare, toSquare, board))
             {
                 return false;
             }
@@ -16,9 +16,9 @@
             return true;
         }
 
-        public override bool CanMoveTo(Square toSquare, Board board)
+        public override bool CanMoveTo(Square fromSquare, Square toSquare, Board board)
         {
-            List<Square> squares = this.GetSquaresPieceCanTheoreticallyMoveTo(board);
+            List<Square> squares = this.GetSquaresPieceCanTheoreticallyMoveTo(fromSquare, board);
             if (!squares.Contains(toSquare))
             {
                 return false;
@@ -27,12 +27,12 @@
             return true;
         }
 
-        private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Board board)
+        private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Square fromSquare, Board board)
         {
             List<Square> squareList = new List<Square>();
 
-            var currentFile = this.Square.FileNumber;
-            var currentRank = this.Square.RankNumber;
+            var currentFile = fromSquare.FileNumber;
+            var currentRank = fromSquare.RankNumber;
             if (currentFile + 1 <= 8 && currentRank + 2 <= 8)
                 squareList.Add(new Square(currentFile + 1, currentRank + 2));
 

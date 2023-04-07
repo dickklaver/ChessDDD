@@ -4,14 +4,14 @@
     {
         List<MoveStrategy> moveStrategies = new List<MoveStrategy>();
 
-        public Rook(Square initialSquare, Player player) : base(initialSquare, player, "R")
+        public Rook(Player player) : base(player, "R")
         {
             this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(8));
         }
 
-        public override bool Attacks(Square toSquare, Board board)
+        public override bool Attacks(Square fromSquare, Square toSquare, Board board)
         {
-            if (!this.CanMoveTo(toSquare, board))
+            if (!this.CanMoveTo(fromSquare, toSquare, board))
             {
                 return false;
             }
@@ -19,15 +19,15 @@
             return true;
         }
 
-        public override bool CanMoveTo(Square toSquare, Board board)
+        public override bool CanMoveTo(Square fromSquare, Square toSquare, Board board)
         {
-            List<Square> squares = this.GetSquaresPieceCanTheoreticallyMoveTo(board);
+            List<Square> squares = this.GetSquaresPieceCanTheoreticallyMoveTo(fromSquare, board);
             if (!squares.Contains(toSquare))
             {
                 return false;
             }
 
-            var squaresInbetweenAreEmpty = board.AreSquaresInBetweenEmpty(this, toSquare);
+            var squaresInbetweenAreEmpty = board.AreSquaresInBetweenEmpty(this, fromSquare, toSquare);
             if (!squaresInbetweenAreEmpty)
             {
                 return false;
@@ -48,13 +48,13 @@
             return true;
         }
 
-        private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Board board)
+        private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Square fromSquare, Board board)
         {
             List<Square> squareList = new List<Square>();
 
             foreach (var moveStrategy in this.moveStrategies)
             {
-                squareList.AddRange(moveStrategy.GetSquaresPieceCanTheoreticallyMoveTo(this.Square));
+                squareList.AddRange(moveStrategy.GetSquaresPieceCanTheoreticallyMoveTo(fromSquare));
             }
 
             return squareList;

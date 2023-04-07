@@ -8,16 +8,16 @@ namespace Chess.ApplicationServices
         {
             this.Id = board.Id;
             this.IsWhiteToMove = board.IsWhiteToMove;
-            this.Pieces = new List<PieceDto>();
-            foreach (var piece in board.__Pieces)
+            this.PiecesOnSquares = new List<PieceOnSquareDto>();
+            foreach (var pieceOnSquare in board.PiecesOnSquares)
             {
-                this.Pieces.Add(PieceDto.CreateFrom(piece));
+                this.PiecesOnSquares.Add(PieceOnSquareDto.CreateFrom(pieceOnSquare));
             }
         }
 
         public Guid Id { get; private set; }
         public bool IsWhiteToMove { get; private set; }
-        public List<PieceDto> Pieces { get; private set; }
+        public List<PieceOnSquareDto> PiecesOnSquares { get; private set; }
 
         internal static BoardDto CreateFrom(Board board)
         {
