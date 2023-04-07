@@ -11,7 +11,7 @@ namespace Chess.Core
 
         public Board()
         {
-            this.IsWhiteToMove = true;
+            IsWhiteToMove = true;
         }
 
         public bool IsWhiteToMove { get; set; }
@@ -20,7 +20,7 @@ namespace Chess.Core
         {
             get
             {
-                return this.IsWhiteToMove ? Player.White : Player.Black;
+                return IsWhiteToMove ? Player.White : Player.Black;
             }
         }
 
@@ -48,28 +48,23 @@ namespace Chess.Core
         public void MakeMove(Square fromSquare, Square toSquare)
         {
             // TODO Add Move within which a string representation of the move to moves collection
+            Maybe<Piece> maybeFromPiece = GetPieceOn(fromSquare);
 
             BusinessRule.ThrowIfNotSatisfied(
-                new HasPieceOnSquare(fromSquare, this) && 
-                new HasPieceOfColorOnSquare(fromSquare, PlayerToMove, this));
+                new HasPieceOnSquare(fromSquare, this) &&
+                new HasPieceOfColorOnSquare(fromSquare, PlayerToMove, this) &&
+                new PieceCanMoveToSquare(maybeFromPiece, fromSquare, toSquare, this));
 
-            var maybePiece = this.GetPieceOn(fromSquare);
-            Piece fromPiece = maybePiece.Value;
-            if (fromPiece.Player != this.PlayerToMove)
-                throw new InvalidMoveException($"no {this.PlayerToMove} piece on {fromSquare}");
-
-            if (!fromPiece.CanMoveTo(toSquare, this))
-                throw new InvalidMoveException($"Cannot move from {fromSquare} to {toSquare}");
-
+            Piece fromPiece = maybeFromPiece.Value;
 
             if (IsCapture(fromPiece, toSquare))
             {
-                this.RemovePieceOn(toSquare);
+                RemovePieceOn(toSquare);
             }
 
             fromPiece.MoveTo(toSquare);
 
-            this.IsWhiteToMove = !this.IsWhiteToMove;
+            IsWhiteToMove = !IsWhiteToMove;
 
             return;
         }
@@ -88,7 +83,7 @@ namespace Chess.Core
             Square currentSquare = new Square(fromPiece.Square.FileNumber + fileIncrement, fromPiece.Square.RankNumber + rankIncrement);
             while (currentSquare != toSquare)
             {
-                maybePiece = this.GetPieceOn(currentSquare);
+                maybePiece = GetPieceOn(currentSquare);
                 if (maybePiece.HasValue)
                 {
                     return false;
@@ -102,13 +97,17 @@ namespace Chess.Core
 
         private bool IsCapture(Piece fromPiece, Square toSquare)
         {
-            var maybeToPiece = this.GetPieceOn(toSquare);
+            Maybe<Piece> maybeToPiece = GetPieceOn(toSquare);
             if (maybeToPiece.HasNoValue)
+            {
                 return false;
+            }
 
             Piece toPiece = maybeToPiece.Value;
             if (fromPiece.Player == toPiece.Player)
+            {
                 return false;
+            }
 
             return true;
         }
@@ -172,9 +171,11 @@ namespace Chess.Core
 
         private void RemovePieceOn(Square square)
         {
-            var maybePiece = this.GetPieceOn(square);
+            Maybe<Piece> maybePiece = GetPieceOn(square);
             if (maybePiece.HasNoValue)
+            {
                 return;
+            }
 
             Piece piece = maybePiece.Value;
             this.__pieces.Remove(piece);
@@ -182,8 +183,8 @@ namespace Chess.Core
 
         private void InitializeWhiteBackrank()
         {
-            __pieces.Add(new King(new Square(5, 1), Player.White));
-            __pieces.Add(new Queen(new Square(4, 1), Player.White));
+            this.__pieces.Add(new King(new Square(5, 1), Player.White));
+            this.__pieces.Add(new Queen(new Square(4, 1), Player.White));
             InitializeWhiteRooks();
             InitializeWhiteBishops();
             InitializeWhiteKnights();
@@ -193,7 +194,7 @@ namespace Chess.Core
         {
             for (int fileNumber = 1; fileNumber <= 8; fileNumber++)
             {
-                __pieces.Add(new Pawn(new Square(fileNumber, 2), Player.White));
+                this.__pieces.Add(new Pawn(new Square(fileNumber, 2), Player.White));
             }
         }
 
@@ -201,14 +202,14 @@ namespace Chess.Core
         {
             for (int fileNumber = 1; fileNumber <= 8; fileNumber++)
             {
-                __pieces.Add(new Pawn(new Square(fileNumber, 7), Player.Black));
+                this.__pieces.Add(new Pawn(new Square(fileNumber, 7), Player.Black));
             }
         }
 
         private void InitializeBlackBackrank()
         {
-            __pieces.Add(new King(new Square(5, 8), Player.Black));
-            __pieces.Add(new Queen(new Square(4, 8), Player.Black));
+            this.__pieces.Add(new King(new Square(5, 8), Player.Black));
+            this.__pieces.Add(new Queen(new Square(4, 8), Player.Black));
             InitializeBlackRooks();
             InitializeBlackBishops();
             InitializeBlackKnights();
@@ -216,38 +217,38 @@ namespace Chess.Core
 
         private void InitializeWhiteRooks()
         {
-            __pieces.Add(new Rook(new Square(1, 1), Player.White));
-            __pieces.Add(new Rook(new Square(8, 1), Player.White));
+            this.__pieces.Add(new Rook(new Square(1, 1), Player.White));
+            this.__pieces.Add(new Rook(new Square(8, 1), Player.White));
         }
 
         private void InitializeWhiteBishops()
         {
-            __pieces.Add(new Bishop(new Square(3, 1), Player.White));
-            __pieces.Add(new Bishop(new Square(6, 1), Player.White));
+            this.__pieces.Add(new Bishop(new Square(3, 1), Player.White));
+            this.__pieces.Add(new Bishop(new Square(6, 1), Player.White));
         }
 
         private void InitializeWhiteKnights()
         {
-            __pieces.Add(new Knight(new Square(2, 1), Player.White));
-            __pieces.Add(new Knight(new Square(7, 1), Player.White));
+            this.__pieces.Add(new Knight(new Square(2, 1), Player.White));
+            this.__pieces.Add(new Knight(new Square(7, 1), Player.White));
         }
 
         private void InitializeBlackRooks()
         {
-            __pieces.Add(new Rook(new Square(1, 8), Player.Black));
-            __pieces.Add(new Rook(new Square(8, 8), Player.Black));
+            this.__pieces.Add(new Rook(new Square(1, 8), Player.Black));
+            this.__pieces.Add(new Rook(new Square(8, 8), Player.Black));
         }
 
         private void InitializeBlackBishops()
         {
-            __pieces.Add(new Bishop(new Square(3, 8), Player.Black));
-            __pieces.Add(new Bishop(new Square(6, 8), Player.Black));
+            this.__pieces.Add(new Bishop(new Square(3, 8), Player.Black));
+            this.__pieces.Add(new Bishop(new Square(6, 8), Player.Black));
         }
 
         private void InitializeBlackKnights()
         {
-            __pieces.Add(new Knight(new Square(2, 8), Player.Black));
-            __pieces.Add(new Knight(new Square(7, 8), Player.Black));
+            this.__pieces.Add(new Knight(new Square(2, 8), Player.Black));
+            this.__pieces.Add(new Knight(new Square(7, 8), Player.Black));
         }
     }
 }

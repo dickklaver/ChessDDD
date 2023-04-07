@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Chess.Core.BusinessRules;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,8 +34,8 @@ namespace Chess.Core.Tests
             public void CannotMove3FromInitialPosition()
             {
                 board.Invoking(y => y.MakeMove(new Square("e2"), new Square("e5")))
-                    .Should().Throw<InvalidMoveException>()
-                    .WithMessage("Cannot move from e2 to e5");
+                    .Should().Throw<BusinessRuleViolationException>()
+                    .Where(x => x.Violations.Contains(new BusinessRuleViolation("Cannot move from e2 to e5")));
             }
 
             [Fact]
@@ -42,8 +44,8 @@ namespace Chess.Core.Tests
                 board.MakeMove(new Square("e2"), new Square("e3"));
                 board.MakeMove(new Square("a7"), new Square("a6"));
                 board.Invoking(y => y.MakeMove(new Square("e3"), new Square("e5")))
-                    .Should().Throw<InvalidMoveException>()
-                    .WithMessage("Cannot move from e3 to e5");
+                    .Should().Throw<BusinessRuleViolationException>()
+                    .Where(x => x.Violations.Contains(new BusinessRuleViolation("Cannot move from e3 to e5")));
             }
 
             [Fact]
@@ -51,8 +53,8 @@ namespace Chess.Core.Tests
             {
                 board.AddPiece(new Knight(new Square("e3"), Player.White));
                 board.Invoking(y => y.MakeMove(new Square("e2"), new Square("e3")))
-                    .Should().Throw<InvalidMoveException>()
-                    .WithMessage("Cannot move from e2 to e3");
+                    .Should().Throw<BusinessRuleViolationException>()
+                    .Where(x => x.Violations.Contains(new BusinessRuleViolation("Cannot move from e2 to e3")));
             }
         }
 
@@ -187,8 +189,8 @@ namespace Chess.Core.Tests
                 board.AddPiece(new Bishop(new Square("h8"), Player.White));
                 board.AddPiece(new Knight(new Square("g7"), Player.White));
                 board.Invoking(y => y.MakeMove(new Square("h8"), new Square("g7")))
-                    .Should().Throw<InvalidMoveException>()
-                    .WithMessage("Cannot move from h8 to g7");
+                    .Should().Throw<BusinessRuleViolationException>()
+                    .Where(x => x.Violations.Contains(new BusinessRuleViolation("Cannot move from h8 to g7")));
             }
         }
 
@@ -263,8 +265,8 @@ namespace Chess.Core.Tests
                 board.AddPiece(new Rook(new Square("h8"), Player.White));
                 board.AddPiece(new Knight(new Square("g8"), Player.White));
                 board.Invoking(y => y.MakeMove(new Square("h8"), new Square("a8")))
-                    .Should().Throw<InvalidMoveException>()
-                    .WithMessage("Cannot move from h8 to a8");
+                    .Should().Throw<BusinessRuleViolationException>()
+                    .Where(x => x.Violations.Contains(new BusinessRuleViolation("Cannot move from h8 to a8")));
             }
         }
 

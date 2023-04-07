@@ -1,4 +1,6 @@
-﻿namespace Chess.Core
+﻿using Chess.Core.BusinessRules;
+
+namespace Chess.Core
 {
     public class Game : AggregateRoot
     {
@@ -29,6 +31,14 @@
                 var toSquare = new Square(to);
                 this.Board.MakeMove(fromSquare, toSquare);
                 return Result.Success(true);
+            }
+            catch (BusinessRuleViolationException brve)
+            {
+                var messages = brve.Violations.Select(v => v.ViolationMessage);
+                var overallMessage = messages.Aggregate((partialPhrase, msg) => $"{partialPhrase} {msg}");
+                
+
+                return Result.Failure<bool>(overallMessage);
             }
             catch (Exception ex)
             {

@@ -3,7 +3,7 @@
 namespace Chess.Core.BusinessRules
 {
     [Serializable]
-    internal class BusinessRuleViolationException: Exception
+    public class BusinessRuleViolationException: Exception
     {
         public IEnumerable<BusinessRuleViolation> Violations { get; }
 
