@@ -9,7 +9,7 @@ namespace Chess.ApplicationServices
             this.Id = board.Id;
             this.IsWhiteToMove = board.IsWhiteToMove;
             this.Pieces = new List<PieceDto>();
-            foreach (var piece in board.Pieces)
+            foreach (var piece in board.__Pieces)
             {
                 this.Pieces.Add(PieceDto.CreateFrom(piece));
             }

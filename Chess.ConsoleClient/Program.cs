@@ -29,9 +29,9 @@ namespace Chess
                 }
 
                 Show(gameService.GetBoard());
+                gameService.SaveGame();
             }
 
-            gameService.SaveGame();
         }
 
         private static string AcceptSquare(string prompt)

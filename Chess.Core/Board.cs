@@ -4,7 +4,7 @@ namespace Chess.Core
 {
     public class Board : Entity
     {
-        protected List<Piece> pieces = new List<Piece>();
+        protected List<Piece> __pieces = new List<Piece>();
 
         public Board()
         {
@@ -21,11 +21,11 @@ namespace Chess.Core
             }
         }
 
-        public IReadOnlyCollection<Piece> Pieces
+        public IReadOnlyCollection<Piece> __Pieces
         {
             get
             {
-                return new ReadOnlyCollection<Piece>(this.pieces);
+                return new ReadOnlyCollection<Piece>(this.__pieces);
             }
         }
 
@@ -39,7 +39,7 @@ namespace Chess.Core
 
         public Maybe<Piece> GetPieceOn(Square square)
         {
-            return this.pieces.Where(p => p.Square.RankNumber == square.RankNumber && p.Square.FileNumber == square.FileNumber).SingleOrDefault().AsMaybe();
+            return this.__pieces.Where(p => p.Square.RankNumber == square.RankNumber && p.Square.FileNumber == square.FileNumber).SingleOrDefault().AsMaybe();
         }
 
         public void MakeMove(Square fromSquare, Square toSquare)
@@ -172,13 +172,13 @@ namespace Chess.Core
                 return;
 
             Piece piece = maybePiece.Value;
-            this.pieces.Remove(piece);
+            this.__pieces.Remove(piece);
         }
 
         private void InitializeWhiteBackrank()
         {
-            pieces.Add(new King(new Square(5, 1), Player.White));
-            pieces.Add(new Queen(new Square(4, 1), Player.White));
+            __pieces.Add(new King(new Square(5, 1), Player.White));
+            __pieces.Add(new Queen(new Square(4, 1), Player.White));
             InitializeWhiteRooks();
             InitializeWhiteBishops();
             InitializeWhiteKnights();
@@ -188,7 +188,7 @@ namespace Chess.Core
         {
             for (int fileNumber = 1; fileNumber <= 8; fileNumber++)
             {
-                pieces.Add(new Pawn(new Square(fileNumber, 2), Player.White));
+                __pieces.Add(new Pawn(new Square(fileNumber, 2), Player.White));
             }
         }
 
@@ -196,14 +196,14 @@ namespace Chess.Core
         {
             for (int fileNumber = 1; fileNumber <= 8; fileNumber++)
             {
-                pieces.Add(new Pawn(new Square(fileNumber, 7), Player.Black));
+                __pieces.Add(new Pawn(new Square(fileNumber, 7), Player.Black));
             }
         }
 
         private void InitializeBlackBackrank()
         {
-            pieces.Add(new King(new Square(5, 8), Player.Black));
-            pieces.Add(new Queen(new Square(4, 8), Player.Black));
+            __pieces.Add(new King(new Square(5, 8), Player.Black));
+            __pieces.Add(new Queen(new Square(4, 8), Player.Black));
             InitializeBlackRooks();
             InitializeBlackBishops();
             InitializeBlackKnights();
@@ -211,38 +211,38 @@ namespace Chess.Core
 
         private void InitializeWhiteRooks()
         {
-            pieces.Add(new Rook(new Square(1, 1), Player.White));
-            pieces.Add(new Rook(new Square(8, 1), Player.White));
+            __pieces.Add(new Rook(new Square(1, 1), Player.White));
+            __pieces.Add(new Rook(new Square(8, 1), Player.White));
         }
 
         private void InitializeWhiteBishops()
         {
-            pieces.Add(new Bishop(new Square(3, 1), Player.White));
-            pieces.Add(new Bishop(new Square(6, 1), Player.White));
+            __pieces.Add(new Bishop(new Square(3, 1), Player.White));
+            __pieces.Add(new Bishop(new Square(6, 1), Player.White));
         }
 
         private void InitializeWhiteKnights()
         {
-            pieces.Add(new Knight(new Square(2, 1), Player.White));
-            pieces.Add(new Knight(new Square(7, 1), Player.White));
+            __pieces.Add(new Knight(new Square(2, 1), Player.White));
+            __pieces.Add(new Knight(new Square(7, 1), Player.White));
         }
 
         private void InitializeBlackRooks()
         {
-            pieces.Add(new Rook(new Square(1, 8), Player.Black));
-            pieces.Add(new Rook(new Square(8, 8), Player.Black));
+            __pieces.Add(new Rook(new Square(1, 8), Player.Black));
+            __pieces.Add(new Rook(new Square(8, 8), Player.Black));
         }
 
         private void InitializeBlackBishops()
         {
-            pieces.Add(new Bishop(new Square(3, 8), Player.Black));
-            pieces.Add(new Bishop(new Square(6, 8), Player.Black));
+            __pieces.Add(new Bishop(new Square(3, 8), Player.Black));
+            __pieces.Add(new Bishop(new Square(6, 8), Player.Black));
         }
 
         private void InitializeBlackKnights()
         {
-            pieces.Add(new Knight(new Square(2, 8), Player.Black));
-            pieces.Add(new Knight(new Square(7, 8), Player.Black));
+            __pieces.Add(new Knight(new Square(2, 8), Player.Black));
+            __pieces.Add(new Knight(new Square(7, 8), Player.Black));
         }
     }
 }

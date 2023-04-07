@@ -6,7 +6,7 @@
         {
             public void AddPiece(Piece piece)
             {
-                this.pieces.Add(piece);
+                this.__pieces.Add(piece);
             }
         }
     }

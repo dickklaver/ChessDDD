@@ -20,7 +20,7 @@ namespace Chess.Core.Tests
         public void PiecesCollectionIsReadonly()
         {
             board.InitializeBoard();
-            board.Pieces.Should().BeOfType<ReadOnlyCollection<Piece>>();
+            board.__Pieces.Should().BeOfType<ReadOnlyCollection<Piece>>();
         }
 
         [Fact]

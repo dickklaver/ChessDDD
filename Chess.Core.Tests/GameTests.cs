@@ -21,7 +21,7 @@ namespace Chess.Core.Tests
             [Fact]
             public void NewGameHas32PiecesOnBoard()
             {
-                game.Board.Pieces.Count.Should().Be(32);
+                game.Board.__Pieces.Count.Should().Be(32);
             }
 
             [Fact]
