@@ -19,7 +19,7 @@ namespace Chess.Core.Tests
         [Fact]
         public void PiecesCollectionIsReadonly()
         {
-            board.InitializeBoard();
+            board.Initialize();
             board.__Pieces.Should().BeOfType<ReadOnlyCollection<Piece>>();
         }
 
@@ -33,7 +33,7 @@ namespace Chess.Core.Tests
         [Fact]
         public void AfterMoveBlackIsThePlayerToMove()
         {
-            board.InitializeBoard();
+            board.Initialize();
             board.MakeMove(new Square("e2"), new Square("e4"));
             board.IsWhiteToMove.Should().BeFalse();
             board.PlayerToMove.Should().Be(Player.Black);
@@ -58,7 +58,7 @@ namespace Chess.Core.Tests
         [Fact]
         public void InitializeBoardSetsUpInitialChessPosition()
         {
-            this.board.InitializeBoard();
+            this.board.Initialize();
 
             var result = board.GetPieceOn(new Square("a1")).Value;
             result.GetType().Should().Be(typeof(Rook));
@@ -140,7 +140,7 @@ namespace Chess.Core.Tests
         [Fact]
         public void InitialBoardFenNotationShouldBeCorrect()
         {
-            board.InitializeBoard();
+            board.Initialize();
             var actualFenNotation = board.ToForsythEdwardsNotation();
             actualFenNotation.Value.Should().Be("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         }

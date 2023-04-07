@@ -29,7 +29,7 @@ namespace Chess.Core
             }
         }
 
-        public void InitializeBoard()
+        public void Initialize()
         {
             InitializeWhiteBackrank();
             InitializeWhitePawns();

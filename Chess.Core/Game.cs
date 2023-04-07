@@ -15,7 +15,7 @@
         public Game()
         {
             this.Board = new Board();
-            this.Board.InitializeBoard();
+            this.Board.Initialize();
         }
 
         public Board Board { get; set; }
