@@ -29,7 +29,7 @@
 
         private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Square fromSquare, Board board)
         {
-            List<Square> squareList = new List<Square>();
+            List<Square> squareList = new();
 
             var currentFile = fromSquare.FileNumber;
             var currentRank = fromSquare.RankNumber;

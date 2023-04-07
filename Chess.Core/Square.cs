@@ -15,7 +15,6 @@
             if (squareString.Length != 2)
                 throw new ArgumentException("invalid square");
 
-
             var fileString = squareString.Substring(0, 1);
             var isValidFile = validFiles.Contains(fileString);
             if (!isValidFile)

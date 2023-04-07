@@ -12,7 +12,7 @@
         }
         public override IEnumerable<BusinessRuleViolation> CheckRule()
         {
-            List<BusinessRuleViolation>? violations = new List<BusinessRuleViolation>();
+            List<BusinessRuleViolation>? violations = new();
             Maybe<Piece> maybePiece = this.board.GetPieceOn(this.square);
             if (maybePiece.HasNoValue)
             {

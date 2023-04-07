@@ -16,7 +16,7 @@
 
         public override List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Square fromSquare)
         {
-            List<Square> squareList = new List<Square>();
+            List<Square> squareList = new();
             // North East
             int steps = 0;
             int rank = fromSquare.RankNumber + 1;

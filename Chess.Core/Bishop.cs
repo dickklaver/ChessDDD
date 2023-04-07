@@ -2,7 +2,7 @@
 {
     public class Bishop : Piece
     {
-        List<MoveStrategy> moveStrategies = new List<MoveStrategy>();
+        readonly List<MoveStrategy> moveStrategies = new();
 
         public Bishop(Player player) : base(player, "B")
         {
@@ -11,17 +11,12 @@
 
         public override bool Attacks(Square fromSquare, Square toSquare, Board board)
         {
-            if (!this.CanMoveTo(fromSquare, toSquare, board))
-            {
-                return false;
-            }
-
-            return true;
+            return this.CanMoveTo(fromSquare, toSquare, board);
         }
 
         public override bool CanMoveTo(Square fromSquare, Square toSquare, Board board)
         {
-            List<Square> squares = this.GetSquaresPieceCanTheoreticallyMoveTo(fromSquare, board);
+            List<Square> squares = this.GetSquaresPieceCanTheoreticallyMoveTo(fromSquare);
             if (!squares.Contains(toSquare))
             {
                 return false;
@@ -40,17 +35,13 @@
             }
 
             var piece = maybePiece.Value;
-            if (piece.Player == this.Player)
-            {
-                return false;
-            }
 
-            return true;
+            return piece.Player != this.Player;
         }
 
-        private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Square fromSquare, Board board)
+        private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Square fromSquare)
         {
-            List<Square> squareList = new List<Square>();
+            List<Square> squareList = new();
 
             foreach (var moveStrategy in this.moveStrategies)
             {

@@ -2,7 +2,7 @@
 {
     public class Rook : Piece
     {
-        List<MoveStrategy> moveStrategies = new List<MoveStrategy>();
+        List<MoveStrategy> moveStrategies = new();
 
         public Rook(Player player) : base(player, "R")
         {
@@ -50,7 +50,7 @@
 
         private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Square fromSquare, Board board)
         {
-            List<Square> squareList = new List<Square>();
+            List<Square> squareList = new();
 
             foreach (var moveStrategy in this.moveStrategies)
             {

@@ -7,8 +7,8 @@ namespace Chess.Core
 {
     public class Board : Entity
     {
-        private readonly List<Square> unmovedSquares = new List<Square>();
-        private readonly Dictionary<Square, PieceOnSquare> piecesOnSquares = new Dictionary<Square, PieceOnSquare>();
+        private readonly List<Square> unmovedSquares = new();
+        private readonly Dictionary<Square, PieceOnSquare> piecesOnSquares = new();
 
         public Board()
         {
@@ -130,7 +130,7 @@ namespace Chess.Core
             (fileIncrement, rankIncrement) = DetermineDirection(fromSquare, toSquare);
 
             Maybe<Piece> maybePiece;
-            Square currentSquare = new Square(fromSquare.FileNumber + fileIncrement, fromSquare.RankNumber + rankIncrement);
+            Square currentSquare = new(fromSquare.FileNumber + fileIncrement, fromSquare.RankNumber + rankIncrement);
             while (currentSquare != toSquare)
             {
                 maybePiece = GetPieceOn(currentSquare);
@@ -233,11 +233,11 @@ namespace Chess.Core
 
         private void InitializeWhiteBackrank()
         {
-            Square? whiteKingSquare = new Square(5, 1);
-            PieceOnSquare pieceOnSquare = new PieceOnSquare(new King(Player.White), whiteKingSquare);
+            Square? whiteKingSquare = new(5, 1);
+            PieceOnSquare pieceOnSquare = new(new King(Player.White), whiteKingSquare);
             AddPieceToBoard(pieceOnSquare, false);
 
-            Square whiteQueenSquare = new Square(4, 1);
+            Square whiteQueenSquare = new(4, 1);
             pieceOnSquare = new PieceOnSquare(new Queen(Player.White), whiteQueenSquare);
             AddPieceToBoard(pieceOnSquare, false);
 
@@ -259,7 +259,7 @@ namespace Chess.Core
         {
             for (int fileNumber = 1; fileNumber <= 8; fileNumber++)
             {
-                Square? pawnSquare = new Square(fileNumber, 2);
+                Square? pawnSquare = new(fileNumber, 2);
                 AddPieceToBoard(new PieceOnSquare(new Pawn(Player.White), pawnSquare), false);
             }
         }
@@ -268,17 +268,17 @@ namespace Chess.Core
         {
             for (int fileNumber = 1; fileNumber <= 8; fileNumber++)
             {
-                Square? pawnSquare = new Square(fileNumber, 7);
+                Square? pawnSquare = new(fileNumber, 7);
                 AddPieceToBoard(new PieceOnSquare(new Pawn(Player.Black), pawnSquare), false);
             }
         }
 
         private void InitializeBlackBackrank()
         {
-            Square? blackKingSquare = new Square(5, 8);
+            Square? blackKingSquare = new(5, 8);
             AddPieceToBoard(new PieceOnSquare(new King(Player.Black), blackKingSquare), false);
 
-            Square? blackQueenSquare = new Square(4, 8);
+            Square? blackQueenSquare = new(4, 8);
             AddPieceToBoard(new PieceOnSquare(new Queen(Player.Black), blackQueenSquare), false);
 
             InitializeBlackRooks();
@@ -288,7 +288,7 @@ namespace Chess.Core
 
         private void InitializeWhiteRooks()
         {
-            Square initialSquare = new Square(1, 1);
+            Square initialSquare = new(1, 1);
             AddPieceToBoard(new PieceOnSquare(new Rook(Player.White), initialSquare), false);
 
             initialSquare = new Square(8, 1);
@@ -297,7 +297,7 @@ namespace Chess.Core
 
         private void InitializeWhiteBishops()
         {
-            Square initialSquare = new Square(3, 1);
+            Square initialSquare = new(3, 1);
             AddPieceToBoard(new PieceOnSquare(new Bishop(Player.White), initialSquare), false);
 
             initialSquare = new Square(6, 1);
@@ -306,7 +306,7 @@ namespace Chess.Core
 
         private void InitializeWhiteKnights()
         {
-            Square initialSquare = new Square(2, 1);
+            Square initialSquare = new(2, 1);
             AddPieceToBoard(new PieceOnSquare(new Knight(Player.White), initialSquare), false);
 
             initialSquare = new Square(7, 1);
@@ -315,7 +315,7 @@ namespace Chess.Core
 
         private void InitializeBlackRooks()
         {
-            Square initialSquare = new Square(1, 8);
+            Square initialSquare = new(1, 8);
             AddPieceToBoard(new PieceOnSquare(new Rook(Player.Black), initialSquare), false);
 
             initialSquare = new Square(8, 8);
@@ -324,7 +324,7 @@ namespace Chess.Core
 
         private void InitializeBlackBishops()
         {
-            Square initialSquare = new Square(3, 8);
+            Square initialSquare = new(3, 8);
             AddPieceToBoard(new PieceOnSquare(new Bishop(Player.Black), initialSquare), false);
 
             initialSquare = new Square(6, 8);
@@ -333,7 +333,7 @@ namespace Chess.Core
 
         private void InitializeBlackKnights()
         {
-            Square initialSquare = new Square(2, 8);
+            Square initialSquare = new(2, 8);
             AddPieceToBoard(new PieceOnSquare(new Knight(Player.Black), initialSquare), false);
 
             initialSquare = new Square(7, 8);

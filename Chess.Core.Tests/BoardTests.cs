@@ -133,7 +133,6 @@ namespace Chess.Core.Tests
                     var expectedPlayer = rank == 2 ? Player.White : Player.Black;
                     result.Player.Should().Be(expectedPlayer);
                 }
-
             }
         }
 

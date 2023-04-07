@@ -20,7 +20,7 @@ namespace Chess.Core.BusinessRules
             if (obj == null)
                 return false;
 
-            if (!(obj is BusinessRuleViolation brv))
+            if (obj is not BusinessRuleViolation brv)
                 return false;
 
             return brv.ViolationMessage.Equals(ViolationMessage);

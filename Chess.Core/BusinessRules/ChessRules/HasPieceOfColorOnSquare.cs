@@ -15,7 +15,7 @@
 
         public override IEnumerable<BusinessRuleViolation> CheckRule()
         {
-            List<BusinessRuleViolation> result = new List<BusinessRuleViolation>();
+            List<BusinessRuleViolation> result = new();
             Maybe<Piece> maybePiece = this.board.GetPieceOn(this.square);
             Piece fromPiece = maybePiece.Value;
             if (this.player != fromPiece.Player)
