@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using Chess.Core.BusinessRules;
+using Chess.Core.BusinessRules.ChessRules;
+
+using System.Collections.ObjectModel;
 
 namespace Chess.Core
 {
@@ -45,10 +48,12 @@ namespace Chess.Core
         public void MakeMove(Square fromSquare, Square toSquare)
         {
             // TODO Add Move within which a string representation of the move to moves collection
-            var maybePiece = this.GetPieceOn(fromSquare);
-            if (maybePiece.HasNoValue)
-                throw new InvalidMoveException($"no piece on {fromSquare}");
 
+            BusinessRule.ThrowIfNotSatisfied(
+                new HasPieceOnSquare(fromSquare, this) && 
+                new HasPieceOfColorOnSquare(fromSquare, PlayerToMove, this));
+
+            var maybePiece = this.GetPieceOn(fromSquare);
             Piece fromPiece = maybePiece.Value;
             if (fromPiece.Player != this.PlayerToMove)
                 throw new InvalidMoveException($"no {this.PlayerToMove} piece on {fromSquare}");

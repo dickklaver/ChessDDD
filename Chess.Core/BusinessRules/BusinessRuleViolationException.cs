@@ -26,6 +26,7 @@ namespace Chess.Core.BusinessRules
 
         protected BusinessRuleViolationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
+            Violations = new List<BusinessRuleViolation>();
         }
     }
 }

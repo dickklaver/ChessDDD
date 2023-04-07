@@ -28,5 +28,15 @@
         {
             return new AndBusinessRule(firstRule, secondRule);
         }
+
+        public static bool operator true(BusinessRule rule)
+        {
+            return false;
+        }
+
+        public static bool operator false(BusinessRule rule)
+        {
+            return false;
+        }
     }
 }
