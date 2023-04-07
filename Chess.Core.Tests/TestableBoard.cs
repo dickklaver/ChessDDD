@@ -6,7 +6,7 @@
         {
             public void AddPiece(Piece piece)
             {
-                this.__pieces.Add(piece);
+                this.AddPieceToBoard(piece, piece.Square, false);
             }
         }
     }

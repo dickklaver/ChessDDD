@@ -78,7 +78,7 @@
         private List<Square> GetSquaresPieceCanTheoreticallyMoveTo(Board board)
         {
             List<Square> squareList = new List<Square>();
-            if (!this.HasMoved)
+            if (!board.HasPieceOnSquareMoved(this.Square))
             {
                 squareList.Add(new Square(this.Square.FileNumber, this.Square.RankNumber + 2 * this.rankIncrement));
             }
