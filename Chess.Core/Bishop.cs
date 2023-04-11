@@ -6,7 +6,7 @@
 
         public Bishop(Player player) : base(player, "B")
         {
-            this.moveStrategies.Add(new DiagonallMoveStrategy(8));
+            this.moveStrategies.Add(new DiagonallMoveStrategy(7));
         }
 
         public override bool Attacks(Square fromSquare, Square toSquare, Board board)

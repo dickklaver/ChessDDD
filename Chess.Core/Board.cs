@@ -25,21 +25,6 @@ namespace Chess.Core
             }
         }
 
-        public IReadOnlyCollection<Piece> __Pieces
-        {
-            get
-            {
-                var pieces = new Collection<Piece>();
-                foreach (var item in this.piecesOnSquares)
-                {
-                    Piece piece = item.Value.Piece;
-                    pieces.Add(piece);
-                }
-
-                return new ReadOnlyCollection<Piece>(pieces);
-            }
-        }
-
         public IReadOnlyCollection<PieceOnSquare> PiecesOnSquares
         {
             get

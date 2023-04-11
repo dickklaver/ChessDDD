@@ -6,8 +6,8 @@
 
         public Queen(Player player) : base(player, "Q")
         {
-            this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(8));
-            this.moveStrategies.Add(new DiagonallMoveStrategy(8));
+            this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(7));
+            this.moveStrategies.Add(new DiagonallMoveStrategy(7));
         }
 
         public override bool Attacks(Square fromSquare, Square toSquare, Board board)

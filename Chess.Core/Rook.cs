@@ -6,7 +6,7 @@
 
         public Rook(Player player) : base(player, "R")
         {
-            this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(8));
+            this.moveStrategies.Add(new VerticalAndHorizontalMoveStrategy(7));
         }
 
         public override bool Attacks(Square fromSquare, Square toSquare, Board board)

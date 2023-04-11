@@ -5,7 +5,7 @@ namespace Chess.Core.Tests
     {
         public class PawnTests
         {
-            private Game game;
+            private readonly Game game;
 
             public PawnTests()
             {
@@ -21,7 +21,7 @@ namespace Chess.Core.Tests
             [Fact]
             public void NewGameHas32PiecesOnBoard()
             {
-                game.Board.__Pieces.Count.Should().Be(32);
+                game.Board.PiecesOnSquares.Count.Should().Be(32);
             }
 
             [Fact]
@@ -157,7 +157,7 @@ namespace Chess.Core.Tests
 
             public class KnightMovementTests
             {
-                private Game game;
+                private readonly Game game;
 
                 public KnightMovementTests()
                 {
