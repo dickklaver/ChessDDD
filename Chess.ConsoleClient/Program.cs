@@ -14,7 +14,7 @@ namespace Chess
     {
         static void Main(string[] args)
         {
-            InitializDisplay();
+            InitializeDisplay();
 
             GameService gameService = new GameService(new GameRepository());
             Show(gameService.GetBoard());
@@ -32,6 +32,8 @@ namespace Chess
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(moveMadeResult.Error);
                     Console.ForegroundColor = originalForegroundColor;
+                    Console.WriteLine("Any key to continue...");
+                    Console.ReadKey();
                 }
 
                 Show(gameService.GetBoard());
@@ -39,45 +41,37 @@ namespace Chess
             }
         }
 
-        private static string AcceptSquare(string prompt)
+        private static void InitializeDisplay()
         {
-            while (true)
-            {
-                Console.Write(prompt);
-                var result = Console.ReadLine();
-                if (result == null)
-                    continue;
+            CONSOLE_FONT_INFO_EX ConsoleFontInfo = new CONSOLE_FONT_INFO_EX();
+            ConsoleFontInfo.cbSize = (uint)Marshal.SizeOf(ConsoleFontInfo);
+            ConsoleFontInfo.FaceName = "MS Gothic";
+            ConsoleFontInfo.dwFontSize.X = 40;
+            ConsoleFontInfo.dwFontSize.Y = 40;
 
-                result = result.ToLower();
-                if (result.Length != 2)
-                    continue;
-
-                if (!"abcdefgh".Contains(result.Substring(0, 1)))
-                    continue;
-
-                if (!"12345678".Contains(result.Substring(1, 1)))
-                    continue;
-
-                return result;
-            }
+            SetCurrentConsoleFontEx(GetStdHandle(StdHandle.OutputHandle), false, ref ConsoleFontInfo);
         }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern Int32 SetCurrentConsoleFontEx(IntPtr ConsoleOutput, bool MaximumWindow, ref CONSOLE_FONT_INFO_EX ConsoleCurrentFontEx);
+
+        [DllImport("kernel32")]
+        private static extern IntPtr GetStdHandle(StdHandle index);
 
         private static void Show(BoardDto board)
         {
+            var originalBackgroundColor = Console.BackgroundColor;
+
             Console.Clear();
             showFiles();
 
-            var fieldIsDark = true;
-            var originalBackgroundColor = Console.BackgroundColor;
-
             for (int rank = 8; rank >= 1; rank--)
             {
-                Console.BackgroundColor = originalBackgroundColor;
-                Console.Write("|" + rank + "|");
+                ShowLeftRank(originalBackgroundColor, rank);
 
                 for (int file = 1; file <= 8; file++)
                 {
-                    fieldIsDark = (rank + file) % 2 == 0;
+                    var fieldIsDark = (rank + file) % 2 == 0;
                     Console.BackgroundColor = fieldIsDark ? ConsoleColor.DarkGreen : ConsoleColor.White;
                     Console.BackgroundColor = fieldIsDark ? ConsoleColor.DarkRed : ConsoleColor.DarkYellow;
                     var maybePieceOnSquare = GetPieceOn(board, file, rank);
@@ -92,14 +86,30 @@ namespace Chess
                     }
                 }
 
-                Console.BackgroundColor = originalBackgroundColor;
-                Console.Write("|" + rank + "|");
-                Console.WriteLine();
+                ShowRightRank(originalBackgroundColor, rank);
             }
 
             showFiles();
             Console.WriteLine("|====================|");
             Console.WriteLine(board.IsWhiteToMove ? "White to move" : "Black to move");
+        }
+
+        private static void showFiles()
+        {
+            Console.Write("| |");
+            for (int file = 1; file <= 8; file++)
+            {
+                var sq = new Square(file, 1);
+                Console.Write(sq.FileString + " ");
+            }
+            Console.Write("| |");
+            Console.WriteLine();
+        }
+
+        private static void ShowLeftRank(ConsoleColor originalBackgroundColor, int rank)
+        {
+            Console.BackgroundColor = originalBackgroundColor;
+            Console.Write("|" + rank + "|");
         }
 
         private static Maybe<PieceOnSquareDto> GetPieceOn(BoardDto board, int file, int rank)
@@ -150,44 +160,40 @@ namespace Chess
             }
         }
 
-        private static void showFiles()
+        private static void ShowRightRank(ConsoleColor originalBackgroundColor, int rank)
         {
-            Console.Write("| |");
-            for (int file = 1; file <= 8; file++)
-            {
-                var sq = new Square(file, 1);
-                Console.Write(sq.FileString + " ");
-            }
-            Console.Write("| |");
+            Console.BackgroundColor = originalBackgroundColor;
+            Console.Write("|" + rank + "|");
             Console.WriteLine();
         }
 
-        private static void InitializDisplay()
+        private static string AcceptSquare(string prompt)
         {
-            CONSOLE_FONT_INFO_EX ConsoleFontInfo = new CONSOLE_FONT_INFO_EX();
-            ConsoleFontInfo.cbSize = (uint)Marshal.SizeOf(ConsoleFontInfo);
-            ConsoleFontInfo.FaceName = "MS Gothic";
-            ConsoleFontInfo.dwFontSize.X = 32;
-            ConsoleFontInfo.dwFontSize.Y = 32;
+            while (true)
+            {
+                Console.Write(prompt);
+                var result = Console.ReadLine();
+                if (result == null)
+                    continue;
 
-            SetCurrentConsoleFontEx(GetStdHandle(StdHandle.OutputHandle), false, ref ConsoleFontInfo);
+                result = result.ToLower();
+                if (result.Length != 2)
+                    continue;
+
+                if (!"abcdefgh".Contains(result.Substring(0, 1)))
+                    continue;
+
+                if (!"12345678".Contains(result.Substring(1, 1)))
+                    continue;
+
+                return result;
+            }
         }
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        static extern Int32 SetCurrentConsoleFontEx(
-        IntPtr ConsoleOutput,
-        bool MaximumWindow,
-        ref CONSOLE_FONT_INFO_EX ConsoleCurrentFontEx);
 
         private enum StdHandle
         {
             OutputHandle = -11
         }
-
-        [DllImport("kernel32")]
-        private static extern IntPtr GetStdHandle(StdHandle index);
-
-        private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
     }
 
     [StructLayout(LayoutKind.Sequential)]
