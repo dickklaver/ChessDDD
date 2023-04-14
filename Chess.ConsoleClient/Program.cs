@@ -4,12 +4,18 @@ using Chess.Infrastructure;
 
 using CSharpFunctionalExtensions;
 
+using System.Text;
+using System.Runtime.InteropServices;
+
+
 namespace Chess
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+            InitializDisplay();
+
             GameService gameService = new GameService(new GameRepository());
             Show(gameService.GetBoard());
             var gameHasEnded = false;
@@ -31,7 +37,6 @@ namespace Chess
                 Show(gameService.GetBoard());
                 gameService.SaveGame();
             }
-
         }
 
         private static string AcceptSquare(string prompt)
@@ -59,9 +64,7 @@ namespace Chess
 
         private static void Show(BoardDto board)
         {
-            Console.WriteLine();
-            Console.WriteLine();
-
+            Console.Clear();
             showFiles();
 
             var fieldIsDark = true;
@@ -74,6 +77,7 @@ namespace Chess
 
                 for (int file = 1; file <= 8; file++)
                 {
+                    fieldIsDark = (rank + file) % 2 == 0;
                     Console.BackgroundColor = fieldIsDark ? ConsoleColor.DarkGreen : ConsoleColor.White;
                     Console.BackgroundColor = fieldIsDark ? ConsoleColor.DarkRed : ConsoleColor.DarkYellow;
                     var maybePieceOnSquare = GetPieceOn(board, file, rank);
@@ -86,9 +90,7 @@ namespace Chess
                     {
                         Console.Write("  ");
                     }
-                    fieldIsDark = !fieldIsDark;
                 }
-                fieldIsDark = !fieldIsDark;
 
                 Console.BackgroundColor = originalBackgroundColor;
                 Console.Write("|" + rank + "|");
@@ -119,8 +121,33 @@ namespace Chess
                 Console.ForegroundColor = ConsoleColor.Black;
             }
 
-            Console.Write(pieceOnSquare.NotationLetter.ToString() + " ");
+
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.Write(NotationLetterToUnicode(pieceOnSquare.NotationLetter.ToString()) + " ");
             Console.ForegroundColor = originalColor;
+        }
+
+        private static string NotationLetterToUnicode(string notationLetter)
+        {
+            notationLetter = notationLetter.ToLower();
+            var result = " ";
+            switch (notationLetter)
+            {
+                case "k":
+                    return "\u2654";
+                case "q":
+                    return "\u2655";
+                case "r":
+                    return "\u2656";
+                case "b":
+                    return "\u2657";
+                case "n":
+                    return "\u2658";
+                case "p":
+                    return "\u2659";
+                default:
+                    return " ";
+            }
         }
 
         private static void showFiles()
@@ -134,5 +161,58 @@ namespace Chess
             Console.Write("| |");
             Console.WriteLine();
         }
+
+        private static void InitializDisplay()
+        {
+            CONSOLE_FONT_INFO_EX ConsoleFontInfo = new CONSOLE_FONT_INFO_EX();
+            ConsoleFontInfo.cbSize = (uint)Marshal.SizeOf(ConsoleFontInfo);
+            ConsoleFontInfo.FaceName = "MS Gothic";
+            ConsoleFontInfo.dwFontSize.X = 32;
+            ConsoleFontInfo.dwFontSize.Y = 32;
+
+            SetCurrentConsoleFontEx(GetStdHandle(StdHandle.OutputHandle), false, ref ConsoleFontInfo);
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern Int32 SetCurrentConsoleFontEx(
+        IntPtr ConsoleOutput,
+        bool MaximumWindow,
+        ref CONSOLE_FONT_INFO_EX ConsoleCurrentFontEx);
+
+        private enum StdHandle
+        {
+            OutputHandle = -11
+        }
+
+        [DllImport("kernel32")]
+        private static extern IntPtr GetStdHandle(StdHandle index);
+
+        private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct COORD
+    {
+        public short X;
+        public short Y;
+
+        public COORD(short X, short Y)
+        {
+            this.X = X;
+            this.Y = Y;
+        }
+    };
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public struct CONSOLE_FONT_INFO_EX
+    {
+        public uint cbSize;
+        public uint nFont;
+        public COORD dwFontSize;
+        public int FontFamily;
+        public int FontWeight;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] // Edit sizeconst if the font name is too big
+        public string FaceName;
     }
 }
